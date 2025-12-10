@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [profileImage, setProfileImage] = useState(null);
+
+    useEffect(() => {
+        const savedImage = localStorage.getItem("profileImage");
+        if (savedImage) {
+        setProfileImage(savedImage);
+        }
+    }, []);
 
   return (
     <div className="dashboard-container">
@@ -11,8 +19,15 @@ export default function Dashboard() {
       <nav className="dashboard-navbar">
         <div></div>
         <h1 className="logo">TU Dublin</h1>
-        <button className="profile-btn" onClick={() => navigate("/profile")}>
-          Profile
+
+        <button
+          className="profile-btn-circle"
+          onClick={() => navigate("/profile")}
+        >
+          <img
+            src={profileImage || "/profile.png"}
+            alt="Profile"
+          />
         </button>
       </nav>
 
