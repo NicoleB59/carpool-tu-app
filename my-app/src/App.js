@@ -7,6 +7,7 @@ import Dashboard from "./screens/Dashboard";
 import Driver from "./screens/Driver";
 import Passenger from "./screens/Passenger";
 import Profile from "./screens/Profile";
+import PassengerList from "./screens/PassengerList";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/driver" element={<Driver />} />
         <Route path="/passenger" element={<Passenger />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/passenger/results" element={<PassengerList />} />
       </Routes>
     </Router>
   );

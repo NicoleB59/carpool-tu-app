@@ -1,6 +1,14 @@
-.dashboard-container {
-  min-height: 100vh;
-  background: #f5f7fb;
+/* This prevents the entire page from scrolling */
+/* html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+} */
+
+.dashboard-page {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Navbar */
@@ -12,6 +20,10 @@
   align-items: center;
   padding: 0 20px;
   color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 .logo {
@@ -19,10 +31,11 @@
   font-size: 20px;
 }
 
+/* Profile Button */
 .profile-btn-circle {
   justify-self: end;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: transparent;
   border: none;
@@ -35,71 +48,81 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-.profile-btn-circle:hover img {
-  transform: scale(1.05);
+/* Fullscreen Map under navbar & above bottom bar */
+.map-fullscreen {
+  position: fixed;
+  top: 60px;      /* navbar height */
+  bottom: 70px;   /* bottom bar height */
+  left: 0;
+  right: 0;
 }
 
 
-/* Choice Screen */
-.choice-container {
-  text-align: center;
-  margin-top: 100px;
+.map-fullscreen > div {
+  width: 100%;
+  height: 100%;
 }
 
-.choice-buttons {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.choice-buttons button {
-  padding: 20px 30px;
-  font-size: 16px;
-  border-radius: 15px;
-  border: none;
-  background: #133a94;
-  color: white;
-  cursor: pointer;
-}
-
-/* Map Pages */
-.map-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.map-placeholder {
-  flex: 1;
-  background: #ddd;
+/* Bottom Action Bar */
+.dashboard-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  min-height: 90px;   
+  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 22px;
+  gap: 10px;          
+  padding: 10px 14px;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+  flex-wrap: wrap;  
 }
 
-.search-bar {
-  background: white;
-  padding: 15px;
-  display: flex;
-  gap: 10px;
-}
 
-.search-bar input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-.search-bar button {
+/* Smaller Buttons */
+.small-action-btn {
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
   background: #133a94;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
+
+.small-action-btn:hover {
+  background: #0b2c73;
+}
+
+/* Back Button */
+.back-btn {
+  justify-self: start;
+  width: 32px;           
+  height: 32px;          
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;       
+  cursor: pointer;
+  padding: 0;
+  display: flex;     
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Driver Inputs */
+.driver-input {
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 110px;
+  font-size: 13px;
+}
+

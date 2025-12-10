@@ -1,0 +1,43 @@
+/* Page padding under fixed navbar */
+.passenger-list-container {
+  padding: 80px 15px 15px 15px;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+.passenger-list-container h2 {
+  margin-bottom: 18px;
+  color: #133a94; /* TU Dublin Blue */
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Individual driver card */
+.driver-card {
+  background: white;
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 16px rgba(19, 58, 148, 0.15);
+  border-left: 5px solid #133a94; /* TU Blue accent */
+  font-size: 14px;
+}
+
+/* Driver trip line */
+.driver-card strong {
+  color: #133a94;
+}
+
+/* Request button spacing */
+.request-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #133a94;
+  color: white;
+  border-radius: 18px;
+  font-weight: 600;
+}
+
+.request-btn:hover {
+  background: #0b2c73;
+}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
+import MapView from "../components/MapView";
+
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,38 +15,39 @@ export default function Dashboard() {
         }
     }, []);
 
-  return (
-    <div className="dashboard-container">
-      {/* Navbar */}
-      <nav className="dashboard-navbar">
-        <div></div>
-        <h1 className="logo">TU Dublin</h1>
+    return (
+        <div className="dashboard-page">
+        {/* Navbar */}
+        <nav className="dashboard-navbar">
+            <div></div>
+            <h1 className="logo">TU Dublin</h1>
 
-        <button
-          className="profile-btn-circle"
-          onClick={() => navigate("/profile")}
-        >
-          <img
-            src={profileImage || "/profile.png"}
-            alt="Profile"
-          />
-        </button>
-      </nav>
+            <button
+            className="profile-btn-circle"
+            onClick={() => navigate("/profile")}
+            >
+            <img
+                src={profileImage || "/profile.png"}
+                alt="Profile"
+            />
+            </button>
+        </nav>
 
-      {/* Choice Section */}
-      <div className="choice-container">
-        <h2>What would you like to do?</h2>
-
-        <div className="choice-buttons">
-          <button onClick={() => navigate("/driver")}>
-            Post a Ride
-          </button>
-
-          <button onClick={() => navigate("/passenger")}>
-            Find a Ride
-          </button>
+        {/* Fullscreen Map */}
+        <div className="map-fullscreen">
+        <MapView />
         </div>
-      </div>
+
+        {/* Bottom Action Bar */}
+        <div className="dashboard-bottom-bar">
+        <button className="small-action-btn" onClick={() => navigate("/driver")}>
+            Post Ride
+        </button>
+
+        <button className="small-action-btn" onClick={() => navigate("/passenger")}>
+            Find Ride
+        </button>
+        </div>
     </div>
-  );
+    );
 }
