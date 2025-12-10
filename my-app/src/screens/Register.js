@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./css/Register.css";
 
 export default function Register() {
@@ -112,8 +113,13 @@ export default function Register() {
         </form>
 
         <p className="login-text">
-          Already have an account? <span>Login</span>
+          Already have an account?{" "}
+          <Link to="/" className="login-link">
+            Login
+          </Link>
         </p>
+
+
       </div>
     </div>
   );
