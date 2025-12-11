@@ -8,6 +8,40 @@ export default function PassengerList() {
   const navigate = useNavigate();
   const results = state?.results || [];
 
+  // ✅ SEND REQUEST TO BACKEND
+  const handleRequestRide = async (rideId) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      alert("You must be logged in to request a ride");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/rides/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rideId,
+          passengerEmail: user.email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Ride request sent!");
+      } else {
+        alert(data.message || "Request failed");
+      }
+    } catch (error) {
+      console.error("Request error:", error);
+      alert("Server error while requesting ride");
+    }
+  };
+
   return (
     <div className="dashboard-page">
       {/* NAVBAR */}
@@ -36,7 +70,10 @@ export default function PassengerList() {
               <div>Seats: {ride.seats}</div>
               <div>Driver: {ride.driverEmail}</div>
 
-              <button className="small-action-btn request-btn">
+              <button
+                className="small-action-btn request-btn"
+                onClick={() => handleRequestRide(ride._id)}
+              >
                 Request Ride
               </button>
             </div>

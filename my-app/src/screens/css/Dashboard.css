@@ -16,7 +16,7 @@
   height: 60px;
   background: #133a94;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr; 
   align-items: center;
   padding: 0 20px;
   color: white;
@@ -25,6 +25,7 @@
   width: 100%;
   z-index: 10;
 }
+
 
 .logo {
   justify-self: center;
@@ -54,12 +55,41 @@
 /* Fullscreen Map under navbar & above bottom bar */
 .map-fullscreen {
   position: fixed;
-  top: 60px;      /* navbar height */
-  bottom: 70px;   /* bottom bar height */
+  top: 60px;      
+  bottom: 70px;   
   left: 0;
   right: 0;
 }
 
+.navbar-right {
+  display: flex;
+  align-items: center;
+  justify-self: end; 
+  gap: 6px;
+}
+
+
+.inbox-btn {
+  width: 26px;         
+  height: 26px;        
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;      
+  cursor: pointer;
+  padding: 0;          
+  margin: 0;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+
+
+.inbox-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
 
 .map-fullscreen > div {
   width: 100%;

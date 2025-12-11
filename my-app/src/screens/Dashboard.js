@@ -19,9 +19,21 @@ export default function Dashboard() {
         <div className="dashboard-page">
         {/* Navbar */}
         <nav className="dashboard-navbar">
-            <div></div>
-            <h1 className="logo">TU Dublin</h1>
+        <div></div>
 
+        <h1 className="logo">TU Dublin</h1>
+
+        <div className="navbar-right">
+            {/* Inbox Button */}
+            <button
+            className="inbox-btn"
+            onClick={() => navigate("/driver/requests")}
+            title="Ride Requests"
+            >
+            ☰
+            </button>
+
+            {/* Profile Button */}
             <button
             className="profile-btn-circle"
             onClick={() => navigate("/profile")}
@@ -31,7 +43,9 @@ export default function Dashboard() {
                 alt="Profile"
             />
             </button>
+        </div>
         </nav>
+
 
         {/* Fullscreen Map */}
         <div className="map-fullscreen">

@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId} = require("mongodb");
 const bcrypt = require("bcrypt");
 
 const app = express();
@@ -230,21 +230,32 @@ async function run() {
 
     // PASSENGER REQUESTS A RIDE
     app.post("/rides/request", async (req, res) => {
-      const { rideId, passengerEmail } = req.body;
+    const { rideId, passengerEmail } = req.body;
 
-      if (!rideId || !passengerEmail) {
-        return res.status(400).json({ message: "Missing request data" });
+    if (!rideId || !passengerEmail) {
+      return res.status(400).json({ message: "Missing request data" });
+    }
+
+    try {
+      const existing = await rideRequestsCollection.findOne({
+        rideId,
+        passengerEmail,
+      });
+
+      if (existing) {
+        return res.status(409).json({
+          message: "You already requested this ride",
+        });
       }
 
-      try {
-        const newRequest = {
-          rideId,
-          passengerEmail,
-          status: "pending",
-          requestedAt: new Date(),
-        };
+      const newRequest = {
+        rideId,
+        passengerEmail,
+        status: "pending",
+        requestedAt: new Date(),
+      };
 
-        await rideRequestsCollection.insertOne(newRequest);
+      await rideRequestsCollection.insertOne(newRequest);
 
         res.status(201).json({ message: "Ride request sent" });
       } catch (error) {
@@ -253,6 +264,49 @@ async function run() {
       }
     });
 
+    // DRIVER ACCEPT / REJECT REQUEST
+    app.put("/rides/request/:id", async (req, res) => {
+      const { id } = req.params;
+      const { status } = req.body; // "accepted" or "rejected"
+
+      if (!["accepted", "rejected"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      try {
+        await rideRequestsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { status } }
+        );
+
+        res.status(200).json({ message: "Request updated" });
+      } catch (error) {
+        console.error("Update Request Error:", error);
+        res.status(500).json({ message: "Failed to update request" });
+      }
+    });
+
+    // GET ALL REQUESTS FOR A DRIVER
+    app.get("/rides/requests/:driverEmail", async (req, res) => {
+      const { driverEmail } = req.params;
+
+      try {
+        const driverRides = await ridesCollection
+          .find({ driverEmail })
+          .toArray();
+
+        const rideIds = driverRides.map((ride) => ride._id.toString());
+
+        const requests = await rideRequestsCollection
+          .find({ rideId: { $in: rideIds } })
+          .toArray();
+
+        res.status(200).json(requests);
+      } catch (error) {
+        console.error("Fetch Driver Requests Error:", error);
+        res.status(500).json({ message: "Failed to fetch driver requests" });
+      }
+    });
 
     const PORT = 5000;
     app.listen(PORT, () =>
