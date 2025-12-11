@@ -6,7 +6,7 @@ const containerStyle = {
   height: "100%",
 };
 
-// ✅ Static libraries (outside component)
+// Static libraries to load
 const libraries = ["marker"];
 
 // Dublin
@@ -18,7 +18,7 @@ const center = {
 export default function MapView() {
   const mapRef = useRef(null);
 
-  // ✅ Proper script loading (NO reload warnings)
+  // script loading
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,

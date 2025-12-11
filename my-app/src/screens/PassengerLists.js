@@ -8,7 +8,7 @@ export default function PassengerList() {
   const navigate = useNavigate();
   const results = state?.results || [];
 
-  // ✅ SEND REQUEST TO BACKEND
+  // SEND REQUEST TO BACKEND
   const handleRequestRide = async (rideId) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
