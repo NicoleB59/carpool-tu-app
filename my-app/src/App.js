@@ -22,6 +22,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/passenger/results" element={<PassengerLists />} />
         <Route path="/driver/requests" element={<DriverRequests />} />
+        <Route path="/sustainability" element={<Sustainability />} />
       </Routes>
     </Router>
   );
