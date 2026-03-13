@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Move this into .env in real projects
 const uri =
-  "mongodb+srv://b00157129_db_user:Bula2cao*@cluster0.opaj543.mongodb.net/?appName=Cluster0";
+  "mongodb+srv://b00157129_db_user:Bula1384cao@cluster0.hetflnn.mongodb.net/?appName=Cluster0";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -281,16 +281,11 @@ async function run() {
         time,
         seats,
         driverEmail,
-
-        // start coords (required)
+        driverGender,
         latitude,
         longitude,
-
-        // optional: end coords (recommended)
         endLat,
         endLng,
-
-        // NEW: array of {lat,lng} sampled along route
         routePoints,
       } = req.body;
 
@@ -307,11 +302,12 @@ async function run() {
 
       try {
         const newRide = {
-          start,
-          destination,
-          time,
-          seats: parseInt(seats, 10),
-          driverEmail,
+            start,
+            destination,
+            time,
+            seats: parseInt(seats, 10),
+            driverEmail,
+            driverGender: driverGender || "unspecified",
 
           // Keep your existing field so /rides/search still works
           location: {
@@ -353,6 +349,39 @@ async function run() {
       } catch (error) {
         console.error("Post Ride Error:", error);
         res.status(500).json({ message: "Failed to post ride" });
+      }
+    });
+
+    // geocoding endpoint using OpenRouteService API
+    app.get("/geocode", async (req, res) => {
+      const { text } = req.query;
+
+      if (!text) {
+        return res.status(400).json({ message: "Destination text is required" });
+      }
+
+      try {
+        const orsRes = await fetch(
+          `https://api.openrouteservice.org/geocode/search?api_key=${process.env.ORS_API_KEY}&text=${encodeURIComponent(text)}`
+        );
+
+        const data = await orsRes.json();
+
+        const feature = data?.features?.[0];
+        if (!feature) {
+          return res.status(404).json({ message: "Location not found" });
+        }
+
+        const [lng, lat] = feature.geometry.coordinates;
+
+        res.json({
+          lat,
+          lng,
+          label: feature.properties?.label || text,
+        });
+      } catch (error) {
+        console.error("Geocode Error:", error);
+        res.status(500).json({ message: "Failed to geocode destination" });
       }
     });
 
@@ -398,16 +427,18 @@ async function run() {
     // -------------------------
     app.get("/rides/match", async (req, res) => {
       const {
-        pickupLat,
-        pickupLng,
-        dropoffLat,
-        dropoffLng,
-        time,
-        maxDistanceM = 800,
-        topN = 5,
-        maxDetourKm = 8,
-        maxDetourMin = 15,
-      } = req.query;
+      pickupLat,
+      pickupLng,
+      dropoffLat,
+      dropoffLng,
+      time,
+      preferredGender = "any",
+      seatsNeeded = 1,
+      maxDistanceM = 800,
+      topN = 5,
+      maxDetourKm = 8,
+      maxDetourMin = 15,
+    } = req.query;
 
       if (!pickupLat || !pickupLng || !dropoffLat || !dropoffLng) {
         return res.status(400).json({ message: "pickup/dropoff coords required" });
@@ -417,6 +448,7 @@ async function run() {
       const pickupLngNum = parseFloat(pickupLng);
       const dropoffLatNum = parseFloat(dropoffLat);
       const dropoffLngNum = parseFloat(dropoffLng);
+      const seatsNeededNum = parseInt(seatsNeeded, 10);
 
       const pickup = {
         type: "Point",
@@ -483,6 +515,7 @@ async function run() {
                 time: 1,
                 seats: 1,
                 driverEmail: 1,
+                driverGender: 1,
                 location: 1,
                 endPoint: 1,
                 routePoints: 1,
@@ -539,6 +572,7 @@ async function run() {
               time: ride.time,
               seats: ride.seats,
               driverEmail: ride.driverEmail,
+              driverGender: ride.driverGender,
 
               pickupDistanceKm: Number(pickupDistanceKm.toFixed(2)),
               dropoffDistanceKm: Number(dropoffDistanceKm.toFixed(2)),
@@ -555,24 +589,31 @@ async function run() {
               matchScore,
             };
           })
-          .filter(
-            (ride) =>
+          .filter((ride) => {
+            const detourOk =
               ride.estimatedDetourDistanceKm <= maxDetourKmNum &&
-              ride.estimatedDetourTimeMin <= maxDetourMinNum
-          )
+              ride.estimatedDetourTimeMin <= maxDetourMinNum;
+
+            const seatsOk = (ride.seats || 0) >= seatsNeededNum;
+
+            const genderOk =
+              preferredGender === "any" ||
+              !preferredGender ||
+              ride.driverGender === preferredGender;
+
+            return detourOk && seatsOk && genderOk;
+          })
           .sort((a, b) => b.matchScore - a.matchScore)
           .slice(0, topNNum);
 
         res.status(200).json(rankedResults);
-      } catch (error) {
-        console.error("Match Error:", error);
-        res.status(500).json({ message: "Match failed" });
-      }
+        } catch (error) {
+          console.error("Match Error:", error);
+          res.status(500).json({ message: "Match failed" });
+        }
     });
 
-    // -------------------------
     // PASSENGER REQUESTS A RIDE
-    // -------------------------
     app.post("/rides/request", async (req, res) => {
       const { rideId, passengerEmail } = req.body;
 

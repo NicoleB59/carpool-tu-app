@@ -1,20 +1,21 @@
-import React, { useMemo } from "react";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import "./css/Sustainability.css";
 import { calculateSustainabilityMetrics } from "../utils/sustainability";
 
 export default function Sustainability() {
-  // Demo data for tomorrow's meeting
-  // Replace this later with real trip data from backend / database
-  const completedTrip = {
+  const location = useLocation();
+
+  // Use live trip data if passed from previous screen
+  // Otherwise fall back to demo data
+  const completedTrip = location.state?.completedTrip || {
     driverBaseKm: 18.4,
     sharedRouteKm: 21.1,
     passengerSoloKm: 11.8,
     passengersCount: 1,
   };
 
-  const metrics = useMemo(() => {
-    return calculateSustainabilityMetrics(completedTrip);
-  }, []);
+  const metrics = calculateSustainabilityMetrics(completedTrip);
 
   return (
     <div className="sustainability-page">

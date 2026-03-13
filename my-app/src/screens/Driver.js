@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../components/MapView";
-import "./css/Dashboard.css";
+import "./css/Passenger.css";
 
 export default function Driver() {
   const navigate = useNavigate();
+
   const [profileImage, setProfileImage] = useState(null);
-
-  const [ride, setRide] = useState({
-    start: "",
-    destination: "",
-    time: "",
-    seats: "",
-  });
-
-  // NEW: store driver's coordinates
+  const [start, setStart] = useState("");
+  const [destination, setDestination] = useState("");
+  const [time, setTime] = useState("");
+  const [seats, setSeats] = useState(1);
+  const [driverGender, setDriverGender] = useState("unspecified");
   const [coords, setCoords] = useState({ lat: null, lng: null });
 
   useEffect(() => {
     const savedImage = localStorage.getItem("profileImage");
     if (savedImage) setProfileImage(savedImage);
 
-    // GET USER'S CURRENT LOCATION
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -29,73 +25,104 @@ export default function Driver() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          setStart("Current Location");
         },
         (error) => {
           console.error("Geolocation error:", error);
-          alert("Could not get your location. Please allow location access.");
+          alert("Please allow location access.");
         }
       );
-    } else {
-      alert("Geolocation is not supported on this browser.");
     }
   }, []);
 
-  // HANDLE INPUT CHANGES
-  const handleChange = (e) => {
-    setRide({ ...ride, [e.target.name]: e.target.value });
+  const geocodeDestination = async (destinationText) => {
+    const res = await fetch(
+      `http://localhost:5000/geocode?text=${encodeURIComponent(destinationText)}`
+    );
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to geocode destination");
+    }
+
+    return data;
   };
 
-  // SEND TO BACKEND WITH COORDS
+  // Simple straight-line sample points for demo purposes
+  const buildRoutePoints = (startLat, startLng, endLat, endLng, steps = 12) => {
+    const points = [];
+
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      points.push({
+        lat: startLat + (endLat - startLat) * t,
+        lng: startLng + (endLng - startLng) * t,
+      });
+    }
+
+    return points;
+  };
+
   const handlePostRide = async () => {
-    if (!ride.start || !ride.destination || !ride.time || !ride.seats) {
-      alert("Please fill in all fields");
-      return;
-    }
-
-    // Make sure we have GPS before posting ride
-    if (coords.lat == null || coords.lng == null) {
-      alert("Still getting your location. Please wait a moment and try again.");
-      return;
-    }
-
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user) {
-      alert("You must be logged in to post a ride");
+      alert("Please log in first.");
+      return;
+    }
+
+    if (!destination || !time || !seats) {
+      alert("Please enter destination, time, and seats.");
+      return;
+    }
+
+    if (coords.lat == null || coords.lng == null) {
+      alert("Still getting your current location.");
       return;
     }
 
     try {
+      const dropoff = await geocodeDestination(destination);
+
+      const routePoints = buildRoutePoints(
+        coords.lat,
+        coords.lng,
+        dropoff.lat,
+        dropoff.lng
+      );
+
       const res = await fetch("http://localhost:5000/rides", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...ride,
+          start,
+          destination,
+          time,
+          seats,
           driverEmail: user.email,
+          driverGender,
           latitude: coords.lat,
-          longitude: coords.lng, // send coords
+          longitude: coords.lng,
+          endLat: dropoff.lat,
+          endLng: dropoff.lng,
+          routePoints,
         }),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        alert("Ride posted successfully!");
-        setRide({
-          start: "",
-          destination: "",
-          time: "",
-          seats: "",
-        });
-        navigate("/dashboard"); // go back to dashboard
-      } else {
+      if (!res.ok) {
         alert(data.message || "Failed to post ride");
+        return;
       }
+
+      alert("Ride posted successfully!");
+      navigate("/dashboard");
     } catch (error) {
       console.error(error);
-      alert("Server error. Is your backend running?");
+      alert("Failed to post ride.");
     }
   };
 
@@ -123,36 +150,43 @@ export default function Driver() {
       <div className="dashboard-bottom-bar">
         <input
           className="driver-input"
-          name="start"
-          placeholder="Start Location"
-          value={ride.start}
-          onChange={handleChange}
+          placeholder="Start"
+          value={start}
+          onChange={(e) => setStart(e.target.value)}
         />
 
         <input
           className="driver-input"
-          name="destination"
           placeholder="Destination"
-          value={ride.destination}
-          onChange={handleChange}
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
         />
 
         <input
           className="driver-input"
           type="time"
-          name="time"
-          value={ride.time}
-          onChange={handleChange}
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
         />
 
         <input
           className="driver-input"
           type="number"
-          name="seats"
-          placeholder="Seats"
-          value={ride.seats}
-          onChange={handleChange}
+          min="1"
+          max="6"
+          value={seats}
+          onChange={(e) => setSeats(e.target.value)}
         />
+
+        <select
+          className="driver-input"
+          value={driverGender}
+          onChange={(e) => setDriverGender(e.target.value)}
+        >
+          <option value="unspecified">Gender</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+        </select>
 
         <button className="small-action-btn" onClick={handlePostRide}>
           Post Ride

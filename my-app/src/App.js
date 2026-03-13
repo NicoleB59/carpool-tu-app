@@ -9,6 +9,7 @@ import Passenger from "./screens/Passenger";
 import Profile from "./screens/Profile";
 import PassengerLists from "./screens/PassengerLists";
 import DriverRequests from "./screens/DriverRequests";
+import Sustainability from "./screens/sustainability";
 
 function App() {
   return (

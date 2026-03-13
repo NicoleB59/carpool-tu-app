@@ -1,43 +1,134 @@
 /* Page padding under fixed navbar */
 .passenger-list-container {
-  padding: 80px 15px 15px 15px;
-  background: #f4f6fb;
+  padding: 80px 15px 20px 15px;
+  background: linear-gradient(135deg, #133a94, #0b78ab);
   min-height: 100vh;
 }
 
 .passenger-list-container h2 {
-  margin-bottom: 18px;
-  color: #133a94; /* TU Dublin Blue */
+  margin-bottom: 10px;
+  color: white;
   font-weight: 700;
   text-align: center;
+  font-size: 28px;
+}
+
+.passenger-list-container p {
+  text-align: center;
+  color: #f3f4f6;
+  margin-bottom: 18px;
+  font-size: 14px;
 }
 
 /* Individual driver card */
 .driver-card {
   background: white;
-  padding: 14px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow: 0 6px 16px rgba(19, 58, 148, 0.15);
-  border-left: 5px solid #133a94; /* TU Blue accent */
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  border-left: 6px solid #133a94;
   font-size: 14px;
 }
 
-/* Driver trip line */
-.driver-card strong {
+/* Main trip line */
+.driver-card .trip-line {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #133a94;
+}
+
+/* General text rows */
+.driver-card .info-row {
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.driver-card .info-row strong {
+  color: #133a94;
+}
+
+/* Divider */
+.driver-card hr {
+  margin: 14px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Score badge */
+.match-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff7e5;
+  color: #8a5a00;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid #f9b233;
+  margin-bottom: 12px;
+}
+
+/* Metrics grid inside each card */
+.metrics-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.metric-mini {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.metric-mini span {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.metric-mini strong {
+  font-size: 15px;
   color: #133a94;
 }
 
 /* Request button spacing */
 .request-btn {
-  margin-top: 10px;
+  margin-top: 14px;
   width: 100%;
   background: #133a94;
   color: white;
   border-radius: 18px;
   font-weight: 600;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .request-btn:hover {
   background: #0b2c73;
+  transform: translateY(-1px);
+}
+
+.request-btn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .passenger-list-container h2 {
+    font-size: 24px;
+  }
+
+  .metrics-grid-mini {
+    grid-template-columns: 1fr;
+  }
+
+  .driver-card {
+    padding: 15px;
+  }
 }
