@@ -122,7 +122,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../components/MapView";
-import "./css/Dashboard.css";
+import "./css/Passenger.css";
 
 export default function Passenger() {
   const navigate = useNavigate();

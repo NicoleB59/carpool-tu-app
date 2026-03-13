@@ -160,46 +160,60 @@ export default function PassengerList() {
         ) : (
           results.map((ride) => (
             <div key={ride._id} className="driver-card">
-              <div>
-                <strong>{ride.start}</strong> → <strong>{ride.destination}</strong>
+              <div className="trip-line">
+                {ride.start} → {ride.destination}
               </div>
 
-              <div>Time: {ride.time}</div>
-              <div>Seats: {ride.seats}</div>
-              <div>Driver: {ride.driverEmail}</div>
+              <div className="match-badge">
+                {getMatchLabel(ride.matchScore)} • {ride.matchScore}/100
+              </div>
+
+              <div className="info-row">
+                <strong>Time:</strong> {ride.time}
+              </div>
+              <div className="info-row">
+                <strong>Seats:</strong> {ride.seats}
+              </div>
+              <div className="info-row">
+                <strong>Driver:</strong> {ride.driverEmail}
+              </div>
 
               <hr />
 
-              <div>
-                <strong>Match Score:</strong> {ride.matchScore}/100
-              </div>
-              <div>
-                <strong>Match Quality:</strong> {getMatchLabel(ride.matchScore)}
-              </div>
-              <div>
-                <strong>Pickup Distance:</strong> {ride.pickupDistanceKm} km
-              </div>
-              <div>
-                <strong>Dropoff Distance:</strong> {ride.dropoffDistanceKm} km
-              </div>
-              <div>
-                <strong>Time Difference:</strong> {ride.timeDifferenceMin} mins
-              </div>
-              <div>
-                <strong>Estimated Detour:</strong> {ride.estimatedDetourDistanceKm} km
-              </div>
-              <div>
-                <strong>Estimated Detour Time:</strong> {ride.estimatedDetourTimeMin} mins
-              </div>
-              <div>
-                <strong>Base Route:</strong> {ride.estimatedBaseRouteKm} km
-              </div>
-              <div>
-                <strong>Shared Route:</strong> {ride.estimatedSharedRouteKm} km
+              <div className="metrics-grid-mini">
+                <div className="metric-mini">
+                  <span>Pickup Distance</span>
+                  <strong>{ride.pickupDistanceKm} km</strong>
+                </div>
+
+                <div className="metric-mini">
+                  <span>Dropoff Distance</span>
+                  <strong>{ride.dropoffDistanceKm} km</strong>
+                </div>
+
+                <div className="metric-mini">
+                  <span>Time Difference</span>
+                  <strong>{ride.timeDifferenceMin} mins</strong>
+                </div>
+
+                <div className="metric-mini">
+                  <span>Detour Distance</span>
+                  <strong>{ride.estimatedDetourDistanceKm} km</strong>
+                </div>
+
+                <div className="metric-mini">
+                  <span>Detour Time</span>
+                  <strong>{ride.estimatedDetourTimeMin} mins</strong>
+                </div>
+
+                <div className="metric-mini">
+                  <span>Shared Route</span>
+                  <strong>{ride.estimatedSharedRouteKm} km</strong>
+                </div>
               </div>
 
               <button
-                className="small-action-btn request-btn"
+                className="request-btn"
                 onClick={() => handleRequestRide(ride._id)}
               >
                 Request Ride
