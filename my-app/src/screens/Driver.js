@@ -11,7 +11,7 @@ export default function Driver() {
   const [destination, setDestination] = useState("");
   const [time, setTime] = useState("");
   const [seats, setSeats] = useState(1);
-  const [driverGender, setDriverGender] = useState("unspecified");
+  const [driverGender, setDriverGender] = useState("");
   const [coords, setCoords] = useState({ lat: null, lng: null });
 
   useEffect(() => {
@@ -35,17 +35,28 @@ export default function Driver() {
     }
   }, []);
 
-  const geocodeDestination = async (destinationText) => {
-    const res = await fetch(
-      `http://localhost:5000/geocode?text=${encodeURIComponent(destinationText)}`
-    );
-    const data = await res.json();
+  const geocodeWithGoogle = (address) => {
+    return new Promise((resolve, reject) => {
+      if (!window.google) {
+        reject("Google Maps not loaded");
+        return;
+      }
 
-    if (!res.ok) {
-      throw new Error(data.message || "Failed to geocode destination");
-    }
+      const geocoder = new window.google.maps.Geocoder();
 
-    return data;
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          const location = results[0].geometry.location;
+
+          resolve({
+            lat: location.lat(),
+            lng: location.lng(),
+          });
+        } else {
+          reject("Failed to find location");
+        }
+      });
+    });
   };
 
   // Simple straight-line sample points for demo purposes
@@ -82,8 +93,7 @@ export default function Driver() {
     }
 
     try {
-      const dropoff = await geocodeDestination(destination);
-
+      const dropoff = await geocodeWithGoogle(destination);
       const routePoints = buildRoutePoints(
         coords.lat,
         coords.lng,
@@ -182,10 +192,12 @@ export default function Driver() {
           className="driver-input"
           value={driverGender}
           onChange={(e) => setDriverGender(e.target.value)}
+          required
         >
-          <option value="unspecified">Gender</option>
+          <option value="">Driver Gender</option>
           <option value="female">Female</option>
           <option value="male">Male</option>
+          <option value="other">Other</option>
         </select>
 
         <button className="small-action-btn" onClick={handlePostRide}>

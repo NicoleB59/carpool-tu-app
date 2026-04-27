@@ -8,6 +8,7 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    gender: "",
   });
 
   const handleChange = (e) => {
@@ -44,7 +45,16 @@ export default function Register() {
             name: form.name,
             email: form.email,
             password: form.password,
-      }),
+            passwordConfirmation: form.confirmPassword,
+            gender: form.gender,
+        }),
+    });
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      gender: "",
     });
 
         const data = await res.json();
@@ -56,6 +66,7 @@ export default function Register() {
                 email: "",
                 password: "",
                 confirmPassword: "",
+                gender: "",
             });
         } else {
             alert(data.message || "Registration failed");
@@ -105,6 +116,27 @@ export default function Register() {
             name="confirmPassword"
             placeholder="Confirm Password"
             value={form.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </select>
+
+          <input
+            type="text"
+            name="gender"
+            placeholder="Gender (optional)"
+            value={form.gender}
             onChange={handleChange}
             required
           />

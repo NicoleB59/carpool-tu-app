@@ -189,17 +189,23 @@ async function run() {
     const rideRequestsCollection = db.collection("ride_requests");
 
     // Geo indexes
-    await ridesCollection.createIndex({ location: "2dsphere" });     // start point / single point search
-    await ridesCollection.createIndex({ routePoints: "2dsphere" });  // route matching (array of points)
+    await ridesCollection.dropIndex("routePoints_2dsphere").catch(() => {});
+    await ridesCollection.dropIndex("routePoints.coordinates_2dsphere").catch(() => {});
 
+    await ridesCollection.createIndex({ location: "2dsphere" });
+    await ridesCollection.createIndex({ "routePoints.coordinates": "2dsphere" });
     // -------------------------
     // REGISTER
     // -------------------------
     app.post("/register", async (req, res) => {
-      const { name, email, password } = req.body;
+      const { name, email, password, gender } = req.body;
 
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !gender) {
         return res.status(400).json({ message: "All fields are required" });
+      }
+
+      if (!["female", "male", "other"].includes(gender)) {
+        return res.status(400).json({ message: "Invalid gender selected" });
       }
 
       const validDomains = ["@tudublin.ie", "@mytudublin.ie"];
@@ -222,6 +228,7 @@ async function run() {
           name,
           email,
           password: hashedPassword,
+          gender,
           createdAt: new Date(),
         };
 
@@ -262,7 +269,7 @@ async function run() {
 
         res.status(200).json({
           message: "Login successful",
-          user: { id: user._id, name: user.name, email: user.email },
+          user: { id: user._id, name: user.name, email: user.email, gender: user.gender },
         });
       } catch (error) {
         console.error("Login Error:", error);
@@ -472,8 +479,7 @@ async function run() {
             {
               $geoNear: {
                 near: pickup,
-                key: "routePoints",
-                maxDistance: maxD,
+                key: "routePoints.coordinates",                maxDistance: maxD,
                 distanceField: "pickupDistanceMeters",
                 spherical: true,
                 query: time ? { time } : {},
@@ -495,7 +501,7 @@ async function run() {
           return res.json([]);
         }
 
-        // 2) among eligible rides: route also passes near dropoff
+        // among eligible rides: route also passes near dropoff
         const candidateRides = await ridesCollection
           .aggregate([
             {
@@ -620,7 +626,6 @@ async function run() {
       if (!rideId || !passengerEmail) {
         return res.status(400).json({ message: "Missing request data" });
       }
-
       try {
         const existing = await rideRequestsCollection.findOne({
           rideId,

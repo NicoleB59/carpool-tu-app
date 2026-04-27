@@ -43,7 +43,7 @@ body {
 }
 
 /* Inputs */
-form input {
+form input, form select {
   width: 100%;
   padding: 14px;
   margin-bottom: 16px;
@@ -53,7 +53,7 @@ form input {
   transition: 0.2s ease;
 }
 
-form input:focus {
+form input:focus, form select:focus {
   outline: none;
   border-color: #133a94; /* Blue focus */
   box-shadow: 0 0 0 2px rgba(19, 58, 148, 0.15);
