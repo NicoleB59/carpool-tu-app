@@ -4,6 +4,7 @@ import "./css/Profile.css";
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
@@ -11,7 +12,24 @@ export default function Profile() {
 
     setUser(savedUser);
     if (savedImage) setProfileImage(savedImage);
+
+    if (savedUser?.email) {
+      fetchReviews(savedUser.email);
+    }
   }, []);
+
+  const fetchReviews = async (email) => {
+    try {
+      const res = await fetch(`http://localhost:5000/reviews/${email}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setReviews(data);
+      }
+    } catch (error) {
+      console.error("Review fetch error:", error);
+    }
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -49,7 +67,31 @@ export default function Profile() {
         </label>
 
         <h2>{user.name}</h2>
-        <p>{user.email}</p>
+
+        <p>
+          <strong>Email:</strong>{" "}
+          {user.email}
+        </p>
+
+        <p>
+          <strong>Gender:</strong>{" "}
+          {user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : "Not set"}
+        </p>
+
+        <div className="reviews-section">
+          <h3>My Reviews</h3>
+
+          {reviews.length === 0 ? (
+            <p>No reviews left yet.</p>
+          ) : (
+            reviews.map((review) => (
+              <div key={review._id} className="review-card">
+                <p><strong>Rating:</strong> {"⭐".repeat(review.rating)}</p>
+                <p>{review.comment}</p>
+              </div>
+            ))
+          )}
+        </div>
 
         <button className="logout-btn" onClick={handleLogout}>
           Logout

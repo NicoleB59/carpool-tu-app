@@ -1,24 +1,26 @@
 .profile-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #133a94, #0b78ab);
+  background: #1a7184; 
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 25px;
 }
 
 .profile-card {
-  background: white;
-  padding: 40px;
-  border-radius: 22px;
+  background: #1a7184; 
+  padding: 35px;
+  border-radius: 0;
   text-align: center;
   width: 100%;
-  max-width: 380px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  max-width: 390px;
+  box-shadow: none;
 }
 
+/* Profile image */
 .profile-image-wrapper {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   margin: 0 auto 15px;
 }
 
@@ -27,36 +29,69 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border: 3px solid white;
 }
 
+/* Upload button */
 .upload-btn {
   display: inline-block;
   margin-bottom: 15px;
-  background: #f9b233;
-  padding: 8px 18px;
-  border-radius: 12px;
+  background: white;
+  padding: 6px 16px;
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 12px;
   cursor: pointer;
+  color: #333;
 }
 
+/* Text */
 .profile-card h2 {
   margin: 10px 0 5px;
-  color: #1a7184;
+  color: white;
+  font-size: 18px;
 }
 
 .profile-card p {
-  color: #555;
-  margin-bottom: 25px;
+  color: white;
+  font-size: 13px;
+  margin-bottom: 10px;
 }
 
+/* Logout button (same style as register button) */
 .logout-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
+  width: 120px;
+  padding: 8px 14px;
+  margin-top: 15px;
+  border-radius: 18px;
   border: none;
-  background: #133a94;
+  background: linear-gradient(#d9d9d9, #8f8f8f);
   color: white;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
+}
+
+.logout-btn:hover {
+  transform: scale(1.03);
+}
+
+/* Reviews section */
+.reviews-section {
+  margin-top: 20px;
+}
+
+.reviews-section h3 {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.review-card {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #333;
 }

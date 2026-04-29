@@ -1,39 +1,34 @@
-body {
-  margin: 0;
-  background: #e5e7eb;
+:root {
+  --primary: #1a7184;
+  --primary-dark: #145a68;
+  --accent: #f3d77a;
+  --grey-btn: linear-gradient(#d9d9d9, #8f8f8f);
+  --card: #ffffff;
+  --text: #333;
+}
+
+* {
+  box-sizing: border-box;
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body {
+  margin: 0;
+  background: #e5e5e5;
 }
 
-/* Phone shell */
-.app-phone {
-  width: 390px;
-  height: 844px;
-  background: white;
-  border-radius: 36px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  position: relative;
-  border: 10px solid #111;
+button {
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-/* Notch */
-.app-phone::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;
-  height: 28px;
-  background: #111;
-  border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;
-  z-index: 999;
+button:active {
+  transform: scale(0.97);
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
 }

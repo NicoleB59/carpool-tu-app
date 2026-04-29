@@ -21,7 +21,7 @@ body {
 .sustainability-card {
   background: #ffffff;
   padding: 35px;
-  border-radius: 20px;
+  border-radius: 20px; 
   width: 100%;
   max-width: 700px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
@@ -52,7 +52,7 @@ body {
 
 /* Metric Boxes */
 .metric-box {
-  background: #f7f7f7;
+  background: #1a7184;
   border-radius: 14px;
   padding: 18px;
   border: 1.5px solid #e5e5e5;
@@ -72,7 +72,7 @@ body {
 
 /* Highlight box for CO2 saved */
 .metric-box.highlight {
-  background: #fff7e5;
+  background: #1a7184;
   border: 2px solid #f9b233;
 }
 
