@@ -52,7 +52,7 @@ body {
 
 /* Metric Boxes */
 .metric-box {
-  background: #1a7184;
+  background: #f7f7f7;
   border-radius: 14px;
   padding: 18px;
   border: 1.5px solid #e5e5e5;
@@ -72,7 +72,7 @@ body {
 
 /* Highlight box for CO2 saved */
 .metric-box.highlight {
-  background: #1a7184;
+  background: #fff7e5;
   border: 2px solid #f9b233;
 }
 

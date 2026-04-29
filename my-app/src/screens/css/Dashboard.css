@@ -26,6 +26,11 @@
   font-weight: 800;
 }
 
+.logo-img {
+  height: 40px;
+  object-fit: contain;
+}
+
 .dashboard-bottom-bar {
   position: fixed;
   bottom: 0;

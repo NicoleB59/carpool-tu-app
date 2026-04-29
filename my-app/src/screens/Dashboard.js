@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import MapView from "../components/MapView";
+import logo2 from "./assets/carpool-log.png";
 
 
 export default function Dashboard() {
@@ -18,33 +19,35 @@ export default function Dashboard() {
     return (
         <div className="dashboard-page">
         {/* Navbar */}
-        <nav className="dashboard-navbar">
-        <div></div>
+            <nav className="dashboard-navbar">
+            
+            {/* LEFT (empty or back button later) */}
+            <div></div>
 
-        <h1 className="logo">TU Dublin</h1>
+            {/* CENTER LOGO */}
+            <div className="logo">
+                <img src="/assets/carpool-logo2.png" alt="logo" />
+            </div>
 
-        <div className="navbar-right">
-            {/* Inbox Button */}
-            <button
-            className="inbox-btn"
-            onClick={() => navigate("/driver/requests")}
-            title="Ride Requests"
-            >
-            ☰
-            </button>
+            {/* RIGHT SIDE */}
+            <div className="navbar-right">
+                <button
+                className="inbox-btn"
+                onClick={() => navigate("/driver/requests")}
+                title="Ride Requests"
+                >
+                ☰
+                </button>
 
-            {/* Profile Button */}
-            <button
-            className="profile-btn-circle"
-            onClick={() => navigate("/profile")}
-            >
-            <img
-                src={profileImage || "/profile.png"}
-                alt="Profile"
-            />
-            </button>
-        </div>
-        </nav>
+                <button
+                className="profile-btn-circle"
+                onClick={() => navigate("/profile")}
+                >
+                <img src={profileImage || "/profile.png"} alt="Profile" />
+                </button>
+            </div>
+
+            </nav>
 
 
         {/* Fullscreen Map */}
