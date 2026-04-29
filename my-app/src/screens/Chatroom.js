@@ -3,16 +3,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../screens/css/PassengerList.css";
 
 export default function Chatroom() {
-  const navigate = useNavigate();
-  const { state } = useLocation();
+    const navigate = useNavigate();
+    const { state } = useLocation();
 
-  const rideRequestId = state?.rideRequestId;
-  const user = JSON.parse(localStorage.getItem("user"));
+    const rideRequestId = state?.rideRequestId;
+    const destination = state?.destination;
+    const start = state?.start;
 
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  const fetchMessages = async () => {
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState("");
+
+    const fetchMessages = async () => {
     if (!rideRequestId) return;
 
     try {
@@ -75,9 +78,11 @@ export default function Chatroom() {
             if (res.ok) {
                 alert("Drive started!");
                 navigate("/drive-tracking", {
-                state: {
-                    destination: "TU Dublin Blanchardstown",
-                },
+                    state: {
+                        rideRequestId,
+                        destination,
+                        start,
+                    },
                 });
             } else {
             alert("Failed to start drive");
@@ -86,6 +91,26 @@ export default function Chatroom() {
             console.error(error);
             alert("Server error starting drive");
         }
+    };
+
+    const completeDrive = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/rides/request/${rideRequestId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        });
+
+        if (res.ok) {
+          alert("Drive completed!");
+          navigate("/sustainability");
+        } else {
+          alert("Failed to complete drive");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Server error completing drive");
+      }
     };
 
   if (!rideRequestId) {
@@ -131,6 +156,10 @@ export default function Chatroom() {
 
         <button className="request-btn" onClick={startDrive}>
             Start Drive
+        </button>
+
+        <button className="request-btn" onClick={completeDrive}>
+            Complete Drive
         </button>
 
         <button className="small-action-btn" onClick={() => navigate("/dashboard")}>

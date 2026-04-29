@@ -76,8 +76,12 @@ export default function PassengerRequests() {
                 className="request-btn"
                 onClick={() =>
                   navigate("/chat", {
-                    state: { rideRequestId: req._id },
-                  })
+                    state: {
+                        rideRequestId: req._id,
+                        destination: req.destination,
+                        start: req.start,
+                    },
+                    })
                 }
               >
                 Open Chat

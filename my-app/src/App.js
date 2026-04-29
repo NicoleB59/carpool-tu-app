@@ -13,6 +13,7 @@ import Sustainability from "./screens/sustainability";
 import Chatroom from "./screens/Chatroom";
 import PassengerRequests from "./screens/PassengerRequests";
 import DriveTracking from "./screens/DriveTracking";
+import Review from "./screens/Review";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/passenger/requests" element={<PassengerRequests />} />
         <Route path="/chat" element={<Chatroom />} />
         <Route path="/drive-tracking" element={<DriveTracking />} />
+        <Route path="/review" element={<Review />} />
       </Routes>
     </Router>
   );

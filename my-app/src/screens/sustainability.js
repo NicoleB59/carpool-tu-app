@@ -1,19 +1,43 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "./css/Sustainability.css";
 import { calculateSustainabilityMetrics } from "../utils/sustainability";
+import { useNavigate } from "react-router-dom";
 
 export default function Sustainability() {
-  const location = useLocation();
+  const [latestRecord, setLatestRecord] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
 
-  // Use live trip data if passed from previous screen
-  // Otherwise fall back to demo data
-  const completedTrip = location.state?.completedTrip || {
-    driverBaseKm: 18.4,
-    sharedRouteKm: 21.1,
-    passengerSoloKm: 11.8,
-    passengersCount: 1,
+  useEffect(() => {
+    fetchLatestSustainability();
+  }, []);
+
+  const fetchLatestSustainability = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/sustainability/${user.email}`);
+      const data = await res.json();
+
+      if (res.ok && data.length > 0) {
+        setLatestRecord(data[0]);
+      }
+    } catch (error) {
+      console.error("Sustainability fetch error:", error);
+    }
   };
+
+  const completedTrip = latestRecord
+    ? {
+        driverBaseKm: latestRecord.driverBaseKm,
+        sharedRouteKm: latestRecord.sharedRouteKm,
+        passengerSoloKm: latestRecord.passengerSoloKm,
+        passengersCount: 1,
+      }
+    : {
+        driverBaseKm: 0,
+        sharedRouteKm: 0,
+        passengerSoloKm: 0,
+        passengersCount: 1,
+      };
 
   const metrics = calculateSustainabilityMetrics(completedTrip);
 
@@ -24,6 +48,12 @@ export default function Sustainability() {
         <p className="subtitle">
           Estimated carbon impact for a completed shared ride
         </p>
+
+        {latestRecord && (
+          <p className="subtitle">
+            Destination: <strong>{latestRecord.destination}</strong>
+          </p>
+        )}
 
         <div className="metrics-grid">
           <div className="metric-box">
@@ -62,6 +92,10 @@ export default function Sustainability() {
           </div>
         </div>
 
+        {!latestRecord && (
+          <p className="subtitle">No completed rides yet.</p>
+        )}
+
         <div className="explanation">
           <h3>How this is calculated</h3>
           <p>
@@ -70,6 +104,10 @@ export default function Sustainability() {
             if the driver and passenger had each driven separately.
           </p>
         </div>
+
+        <button className="request-btn" onClick={() => navigate("/review")}>
+          Leave a Review
+        </button>
       </div>
     </div>
   );

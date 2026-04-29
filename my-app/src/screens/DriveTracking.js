@@ -18,11 +18,14 @@ export default function DriveTracking() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const destination = state?.destination || "TU Dublin Blanchardstown";
+  const destination = state?.destination;
 
   const mapRef = useRef(null);
   const carMarkerRef = useRef(null);
   const directionsRendererRef = useRef(null);
+  const routePathRef = useRef([]);
+  const simulationIndex = useRef(0);
+  const rideRequestId = state?.rideRequestId;
 
   const [currentLocation, setCurrentLocation] = useState(defaultCenter);
 
@@ -36,10 +39,20 @@ export default function DriveTracking() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setCurrentLocation({
+        const userLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        });
+        };
+
+        setCurrentLocation(userLocation);
+
+        if (carMarkerRef.current) {
+          carMarkerRef.current.position = userLocation;
+        }
+
+        if (mapRef.current) {
+          mapRef.current.panTo(userLocation);
+        }
       },
       (error) => console.error(error),
       {
@@ -70,12 +83,52 @@ export default function DriveTracking() {
       (result, status) => {
         if (status === "OK") {
           directionsRendererRef.current.setDirections(result);
+
+          const route = result.routes[0].overview_path;
+
+          routePathRef.current = route.map((point) => ({
+            lat: point.lat(),
+            lng: point.lng(),
+          }));
         } else {
           alert("Could not draw route");
         }
       }
     );
   }, [isLoaded, currentLocation, destination]);
+
+  const simulateDrive = () => {
+    if (!routePathRef.current.length || !carMarkerRef.current) {
+      alert("Route not ready yet");
+      return;
+    }
+
+    simulationIndex.current = 0;
+
+    const interval = setInterval(async () => {
+      if (simulationIndex.current >= routePathRef.current.length) {
+        clearInterval(interval);
+        await fetch(`http://localhost:5000/rides/request/${rideRequestId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        });
+        alert("Arrived at destination!");
+        navigate("/sustainability");
+        return;
+      }
+
+      const nextPosition = routePathRef.current[simulationIndex.current];
+
+      carMarkerRef.current.position = nextPosition;
+
+      if (mapRef.current) {
+        mapRef.current.panTo(nextPosition);
+      }
+
+      simulationIndex.current += 1;
+    }, 500);
+  };
 
   const onLoad = (map) => {
     mapRef.current = map;
@@ -106,6 +159,24 @@ export default function DriveTracking() {
         onLoad={onLoad}
         options={{ mapId: process.env.REACT_APP_GOOGLE_MAP_ID }}
       />
+
+      <button
+        style={{
+          position: "fixed",
+          bottom: "75px",
+          left: "20px",
+          zIndex: 99,
+          padding: "12px 18px",
+          borderRadius: "20px",
+          border: "none",
+          background: "#f9b233",
+          color: "black",
+          fontWeight: "bold",
+        }}
+        onClick={simulateDrive}
+      >
+        Simulate Drive
+      </button>
 
       <button
         style={{

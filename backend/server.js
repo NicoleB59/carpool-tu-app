@@ -189,6 +189,8 @@ async function run() {
     const ridesCollection = db.collection("rides");
     const rideRequestsCollection = db.collection("ride_requests");
     const messagesCollection = db.collection("messages");
+    const sustainabilityCollection = db.collection("sustainability");
+    const reviewsCollection = db.collection("reviews");
 
     // Geo indexes
     await ridesCollection.dropIndex("routePoints_2dsphere").catch(() => {});
@@ -674,6 +676,35 @@ async function run() {
           { $set: { status } }
         );
 
+        if (status === "completed") {
+          const request = await rideRequestsCollection.findOne({
+            _id: new ObjectId(id),
+          });
+
+          const ride = await ridesCollection.findOne({
+            _id: new ObjectId(request.rideId),
+          });
+
+          const driverBaseKm = estimateRouteDistanceKmFromPoints(ride.routePoints || []);
+          const sharedRouteKm = driverBaseKm;
+          const passengerSoloKm = driverBaseKm;
+
+          const sustainabilityRecord = {
+            rideRequestId: id,
+            rideId: request.rideId,
+            passengerEmail: request.passengerEmail,
+            driverEmail: ride.driverEmail,
+            destination: ride.destination,
+            driverBaseKm: Number(driverBaseKm.toFixed(2)),
+            sharedRouteKm: Number(sharedRouteKm.toFixed(2)),
+            passengerSoloKm: Number(passengerSoloKm.toFixed(2)),
+            completedAt: new Date(),
+          };
+
+          await sustainabilityCollection.insertOne(sustainabilityRecord);
+          console.log("Sustainability saved:", sustainabilityRecord);
+        }
+
         res.status(200).json({ message: "Request updated" });
       } catch (error) {
         console.error("Update Request Error:", error);
@@ -695,7 +726,19 @@ async function run() {
           .find({ rideId: { $in: rideIds } })
           .toArray();
 
-        res.status(200).json(requests);
+        const requestsWithRideDetails = requests.map((request) => {
+          const ride = driverRides.find((r) => r._id.toString() === request.rideId);
+
+          return {
+            ...request,
+            driverEmail: ride?.driverEmail,
+            destination: ride?.destination,
+            start: ride?.start,
+            time: ride?.time,
+          };
+        });
+
+        res.status(200).json(requestsWithRideDetails);
       } catch (error) {
         console.error("Fetch Driver Requests Error:", error);
         res.status(500).json({ message: "Failed to fetch driver requests" });
@@ -774,7 +817,52 @@ async function run() {
         }
     });
 
-    
+    // GET SUSTAINABILITY RECORDS FOR A USER (DRIVER OR PASSENGER)
+    app.get("/sustainability/:email", async (req, res) => {
+    const { email } = req.params;
+
+    try {
+      const records = await sustainabilityCollection
+        .find({
+          $or: [
+            { driverEmail: email },
+            { passengerEmail: email },
+          ],
+        })
+        .sort({ completedAt: -1 })
+        .toArray();
+
+      res.status(200).json(records);
+    } catch (error) {
+      console.error("Fetch Sustainability Error:", error);
+      res.status(500).json({ message: "Failed to fetch sustainability data" });
+    }
+  });
+
+    app.post("/reviews", async (req, res) => {
+      const { reviewerEmail, rating, comment } = req.body;
+
+      if (!reviewerEmail || !rating || !comment) {
+        return res.status(400).json({ message: "Missing review details" });
+      }
+
+        try {
+          const review = {
+            reviewerEmail,
+            rating,
+            comment,
+            createdAt: new Date(),
+          };
+
+          await reviewsCollection.insertOne(review);
+
+          res.status(201).json({ message: "Review saved" });
+        } catch (error) {
+          console.error("Review Error:", error);
+          res.status(500).json({ message: "Failed to save review" });
+        }
+    });
+
     const PORT = 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
