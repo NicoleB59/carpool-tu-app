@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import "./css/Register.css"; // reuse your theme
+import "./css/Register.css";
+import logo from "../assets/carpool-logo.png";
+
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -55,8 +57,7 @@ export default function Login() {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h1 className="title">TU Dublin</h1>
-        <p className="subtitle">Login to your account</p>
+        <img src={logo} alt="Carpool Logo" className="logo" />
 
         <form onSubmit={handleSubmit}>
           <input

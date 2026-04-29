@@ -10,7 +10,7 @@ body {
 
 .register-container {
   min-height: 100vh;
-  background: #0f7d89;
+  background: #1a7184;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,7 +21,7 @@ body {
   width: 100%;
   max-width: 390px;
   min-height: 100vh;
-  background: #0f7d89;
+  background: #1a7184;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,10 +36,14 @@ body {
   font-size: 0;
   width: 180px;
   height: 110px;
-  background-image: url("src/assets/carpool-logo.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 160px;
   margin-bottom: 20px;
 }
 

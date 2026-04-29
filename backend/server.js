@@ -863,6 +863,22 @@ async function run() {
         }
     });
 
+    app.get("/reviews/:email", async (req, res) => {
+      const { email } = req.params;
+
+      try {
+        const reviews = await reviewsCollection
+          .find({ reviewerEmail: email })
+          .sort({ createdAt: -1 })
+          .toArray();
+
+        res.status(200).json(reviews);
+      } catch (error) {
+        console.error("Fetch Reviews Error:", error);
+        res.status(500).json({ message: "Failed to fetch reviews" });
+      }
+    });
+
     const PORT = 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
