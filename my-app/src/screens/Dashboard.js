@@ -26,7 +26,7 @@ export default function Dashboard() {
 
             {/* CENTER LOGO */}
             <div className="logo">
-                <img src="/assets/carpool-logo2.png" alt="logo" />
+                <img src={logo} alt="Carpool Logo" className="logo" />
             </div>
 
             {/* RIGHT SIDE */}
