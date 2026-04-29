@@ -33,17 +33,28 @@ export default function Passenger() {
     }
   }, []);
 
-  const geocodeDestination = async (destinationText) => {
-    const res = await fetch(
-      `http://localhost:5000/geocode?text=${encodeURIComponent(destinationText)}`
-    );
-    const data = await res.json();
+  const geocodeDestination = (address) => {
+    return new Promise((resolve, reject) => {
+      if (!window.google) {
+        reject("Google Maps not loaded");
+        return;
+      }
 
-    if (!res.ok) {
-      throw new Error(data.message || "Failed to geocode destination");
-    }
+      const geocoder = new window.google.maps.Geocoder();
 
-    return data;
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          const location = results[0].geometry.location;
+
+          resolve({
+            lat: location.lat(),
+            lng: location.lng(),
+          });
+        } else {
+          reject("Location not found");
+        }
+      });
+    });
   };
 
   const handleSearchDrivers = async () => {
@@ -69,7 +80,7 @@ export default function Passenger() {
         `&time=${encodeURIComponent(time)}` +
         `&preferredGender=${encodeURIComponent(preferredGender)}` +
         `&seatsNeeded=${seatsNeeded}` +
-        `&topN=5`;
+        `&topN=10&maxDistanceM=10000&maxDetourKm=50&maxDetourMin=60`;
 
       const res = await fetch(url);
       const data = await res.json();

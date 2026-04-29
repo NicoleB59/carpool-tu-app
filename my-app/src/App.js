@@ -10,6 +10,7 @@ import Profile from "./screens/Profile";
 import PassengerLists from "./screens/PassengerLists";
 import DriverRequests from "./screens/DriverRequests";
 import Sustainability from "./screens/sustainability";
+import Chatroom from "./screens/Chatroom";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/passenger/results" element={<PassengerLists />} />
         <Route path="/driver/requests" element={<DriverRequests />} />
         <Route path="/sustainability" element={<Sustainability />} />
+        <Route path="/chatroom" element={<Chatroom />} />
       </Routes>
     </Router>
   );

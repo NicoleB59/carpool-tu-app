@@ -182,11 +182,13 @@ async function run() {
     await client.connect();
     console.log(" Connected to MongoDB!");
 
+    // Collections
     const db = client.db("app");
     const registeredUsersCollection = db.collection("register_users");
     const loginLogsCollection = db.collection("login_logs");
     const ridesCollection = db.collection("rides");
     const rideRequestsCollection = db.collection("ride_requests");
+    const messagesCollection = db.collection("messages");
 
     // Geo indexes
     await ridesCollection.dropIndex("routePoints_2dsphere").catch(() => {});
@@ -194,6 +196,7 @@ async function run() {
 
     await ridesCollection.createIndex({ location: "2dsphere" });
     await ridesCollection.createIndex({ "routePoints.coordinates": "2dsphere" });
+
     // -------------------------
     // REGISTER
     // -------------------------
@@ -346,6 +349,8 @@ async function run() {
         };
 
         const result = await ridesCollection.insertOne(newRide);
+
+        console.log("Ride saved:", result.insertedId);
 
         res.status(201).json({
           message: hasRoutePoints
@@ -507,7 +512,7 @@ async function run() {
             {
               $geoNear: {
                 near: dropoff,
-                key: "routePoints",
+                key: "routePoints.coordinates",
                 maxDistance: maxD,
                 distanceField: "dropoffDistanceMeters",
                 spherical: true,
@@ -693,6 +698,47 @@ async function run() {
       } catch (error) {
         console.error("Fetch Driver Requests Error:", error);
         res.status(500).json({ message: "Failed to fetch driver requests" });
+      }
+    });
+
+    // SEND MESSAGE
+    app.post("/messages", async (req, res) => {
+      const { rideRequestId, senderEmail, message } = req.body;
+
+      if (!rideRequestId || !senderEmail || !message) {
+        return res.status(400).json({ message: "Missing message details" });
+      }
+
+      try {
+        const newMessage = {
+          rideRequestId,
+          senderEmail,
+          message,
+          sentAt: new Date(),
+        };
+
+        await messagesCollection.insertOne(newMessage);
+        res.status(201).json({ message: "Message sent" });
+      } catch (error) {
+        console.error("Send Message Error:", error);
+        res.status(500).json({ message: "Failed to send message" });
+      }
+    });
+
+    // GET MESSAGES
+    app.get("/messages/:rideRequestId", async (req, res) => {
+      const { rideRequestId } = req.params;
+
+      try {
+        const messages = await messagesCollection
+          .find({ rideRequestId })
+          .sort({ sentAt: 1 })
+          .toArray();
+
+        res.status(200).json(messages);
+      } catch (error) {
+        console.error("Fetch Messages Error:", error);
+        res.status(500).json({ message: "Failed to fetch messages" });
       }
     });
 
