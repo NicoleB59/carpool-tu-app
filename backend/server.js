@@ -701,6 +701,38 @@ async function run() {
       }
     });
 
+    // GET ALL REQUESTS FOR A PASSENGER
+    app.get("/rides/requests/passenger/:email", async (req, res) => {
+      const { email } = req.params;
+
+      try {
+        const requests = await rideRequestsCollection
+          .find({ passengerEmail: email })
+          .toArray();
+
+        const requestsWithRideDetails = await Promise.all(
+          requests.map(async (request) => {
+            const ride = await ridesCollection.findOne({
+              _id: new ObjectId(request.rideId),
+            });
+
+            return {
+              ...request,
+              driverEmail: ride?.driverEmail || "Unknown driver",
+              destination: ride?.destination || "Unknown destination",
+              time: ride?.time || "Unknown time",
+              start: ride?.start || "Unknown start",
+            };
+          })
+        );
+
+        res.status(200).json(requestsWithRideDetails);
+      } catch (error) {
+        console.error("Fetch Passenger Requests Error:", error);
+        res.status(500).json({ message: "Failed to fetch passenger requests" });
+      }
+    });
+
     // SEND MESSAGE
     app.post("/messages", async (req, res) => {
       const { rideRequestId, senderEmail, message } = req.body;

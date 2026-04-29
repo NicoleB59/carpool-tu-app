@@ -115,6 +115,21 @@ export default function DriverRequests() {
                   </button>
                 </div>
               )}
+              
+              // Chat button only shows for accepted requests
+              {req.status === "accepted" && (
+                  <button
+                    className="request-btn"
+                    style={{ marginTop: "10px" }}
+                    onClick={() =>
+                      navigate("/chat", {
+                        state: { rideRequestId: req._id },
+                      })
+                    }
+                  >
+                    Open Chat
+                  </button>
+                )}
             </div>
           ))
         )}
