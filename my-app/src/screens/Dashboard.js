@@ -61,6 +61,10 @@ export default function Dashboard() {
         <button className="small-action-btn" onClick={() => navigate("/passenger")}>
             Find Ride
         </button>
+
+        <button className="small-action-btn" onClick={() => navigate("/passenger/requests")}>
+            My Requests
+        </button>
         </div>
     </div>
     );

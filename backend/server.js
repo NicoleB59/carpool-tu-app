@@ -484,7 +484,8 @@ async function run() {
             {
               $geoNear: {
                 near: pickup,
-                key: "routePoints.coordinates",                maxDistance: maxD,
+                key: "routePoints.coordinates",                
+                maxDistance: maxD,
                 distanceField: "pickupDistanceMeters",
                 spherical: true,
                 query: time ? { time } : {},
@@ -663,7 +664,7 @@ async function run() {
       const { id } = req.params;
       const { status } = req.body;
 
-      if (!["accepted", "rejected"].includes(status)) {
+      if (!["accepted", "rejected", "started", "completed"].includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
       }
 
@@ -758,22 +759,22 @@ async function run() {
     });
 
     // GET MESSAGES
-    app.get("/messages/:rideRequestId", async (req, res) => {
+    app.get("/messages/:rideRequestId", async (req, res) => {      
       const { rideRequestId } = req.params;
+        try {
+          const messages = await messagesCollection
+            .find({ rideRequestId })
+            .sort({ sentAt: 1 })
+            .toArray();
 
-      try {
-        const messages = await messagesCollection
-          .find({ rideRequestId })
-          .sort({ sentAt: 1 })
-          .toArray();
-
-        res.status(200).json(messages);
-      } catch (error) {
-        console.error("Fetch Messages Error:", error);
-        res.status(500).json({ message: "Failed to fetch messages" });
-      }
+          res.status(200).json(messages);
+        } catch (error) {
+          console.error("Fetch Messages Error:", error);
+          res.status(500).json({ message: "Failed to fetch messages" });
+        }
     });
 
+    
     const PORT = 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {

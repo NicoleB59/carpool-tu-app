@@ -11,6 +11,8 @@ import PassengerLists from "./screens/PassengerLists";
 import DriverRequests from "./screens/DriverRequests";
 import Sustainability from "./screens/sustainability";
 import Chatroom from "./screens/Chatroom";
+import PassengerRequests from "./screens/PassengerRequests";
+import DriveTracking from "./screens/DriveTracking";
 
 function App() {
   return (
@@ -25,7 +27,9 @@ function App() {
         <Route path="/passenger/results" element={<PassengerLists />} />
         <Route path="/driver/requests" element={<DriverRequests />} />
         <Route path="/sustainability" element={<Sustainability />} />
-        <Route path="/chatroom" element={<Chatroom />} />
+        <Route path="/passenger/requests" element={<PassengerRequests />} />
+        <Route path="/chat" element={<Chatroom />} />
+        <Route path="/drive-tracking" element={<DriveTracking />} />
       </Routes>
     </Router>
   );

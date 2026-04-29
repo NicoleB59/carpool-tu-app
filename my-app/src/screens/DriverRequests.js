@@ -115,7 +115,7 @@ export default function DriverRequests() {
                   </button>
                 </div>
               )}
-              
+
               // Chat button only shows for accepted requests
               {req.status === "accepted" && (
                   <button
@@ -123,7 +123,11 @@ export default function DriverRequests() {
                     style={{ marginTop: "10px" }}
                     onClick={() =>
                       navigate("/chat", {
-                        state: { rideRequestId: req._id },
+                        state: {
+                          rideRequestId: req._id,
+                          destination: req.destination,
+                          start: req.start,
+                        },
                       })
                     }
                   >
