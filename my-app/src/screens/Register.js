@@ -30,7 +30,6 @@ export default function Register() {
     return;
   }
 
-
   if (form.password !== form.confirmPassword) {
     alert("Passwords do not match");
     return;
@@ -81,7 +80,7 @@ export default function Register() {
   return (
     <div className="register-container">
       <div className="register-card">
-        <img src={logo} alt="Carpool Logo" className="logo" />
+        <img src={logo} alt="Carpool Logo" className="register-logo-img" />
 
         <form onSubmit={handleSubmit}>
           <input
@@ -131,15 +130,6 @@ export default function Register() {
             <option value="male">Male</option>
             <option value="other">Other</option>
           </select>
-
-          <input
-            type="text"
-            name="gender"
-            placeholder="Gender (optional)"
-            value={form.gender}
-            onChange={handleChange}
-            required
-          />
 
           <button type="submit">Register</button>
         </form>

@@ -57,7 +57,7 @@ export default function Login() {
   return (
     <div className="register-container">
       <div className="register-card">
-        <img src={logo} alt="Carpool Logo" className="logo" />
+        <img src={logo} alt="Carpool Logo" className="register-logo-img" />
 
         <form onSubmit={handleSubmit}>
           <input

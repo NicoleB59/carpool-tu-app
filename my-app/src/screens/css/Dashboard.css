@@ -24,10 +24,12 @@
   color: white;
   font-size: 20px;
   font-weight: 800;
+  height: 63px;
 }
 
-.logo-img {
-  height: 40px;
+.dashboard-logo-img{
+  height: 63px;
+  max-width: 140px; 
   object-fit: contain;
 }
 
@@ -72,4 +74,54 @@
   color: white;
   font-size: 13px;
   font-weight: 700;
+}
+
+.back-btn,
+.inbox-btn {
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.navbar-right {
+  display: flex;
+  justify-self: end;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-btn-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+  border: 2px solid white;
+  background: white;
+  overflow: hidden;
+}
+
+.profile-btn-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.map-fullscreen {
+  position: fixed;
+  top: 64px;
+  bottom: 118px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.map-fullscreen > div {
+  width: 100%;
+  height: 100%;
 }

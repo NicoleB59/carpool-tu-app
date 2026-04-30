@@ -32,13 +32,20 @@ body {
   padding: 35px;
 }
 
-.title {
+/* .title {
   font-size: 0;
   width: 180px;
   height: 110px;
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; 
+  margin-bottom: 20px;
+} */
+ 
+.register-logo-img {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
   margin-bottom: 20px;
 }
 

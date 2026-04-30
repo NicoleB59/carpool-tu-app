@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../components/MapView";
-import "./css/Passenger.css";
+import "./css/Dashboard.css";
+import "./css/Driver.css";
 
 export default function Driver() {
   const navigate = useNavigate();

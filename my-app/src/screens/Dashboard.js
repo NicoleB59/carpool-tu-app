@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import MapView from "../components/MapView";
-import logo2 from "./assets/carpool-log.png";
+import logo2 from "../assets/carpool-log.png";
 
 
 export default function Dashboard() {
@@ -25,8 +25,8 @@ export default function Dashboard() {
             <div></div>
 
             {/* CENTER LOGO */}
-            <div className="logo">
-                <img src={logo} alt="Carpool Logo" className="logo" />
+            <div className="dashboard-logo-wrap">
+                <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
             </div>
 
             {/* RIGHT SIDE */}
