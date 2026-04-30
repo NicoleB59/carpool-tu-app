@@ -20,35 +20,33 @@ export default function Dashboard() {
         <div className="dashboard-page">
         {/* Navbar */}
             <nav className="dashboard-navbar">
-            
-            {/* LEFT (empty or back button later) */}
-            <div></div>
+                {/* LEFT (empty or back button later) */}
+                <div></div>
 
-            {/* CENTER LOGO */}
-            <div className="dashboard-logo-wrap">
-                <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
-            </div>
+                {/* CENTER LOGO */}
+                <div className="dashboard-logo-wrap">
+                    <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
+                </div>
 
-            {/* RIGHT SIDE */}
-            <div className="navbar-right">
-                <button
-                className="inbox-btn"
-                onClick={() => navigate("/driver/requests")}
-                title="Ride Requests"
-                >
-                ☰
-                </button>
+                {/* RIGHT SIDE */}
+                <div className="navbar-right">
+                    <button
+                    className="inbox-btn"
+                    onClick={() => navigate("/driver/requests")}
+                    title="Ride Requests"
+                    >
+                    🔔
+                    </button>
 
-                <button
-                className="profile-btn-circle"
-                onClick={() => navigate("/profile")}
-                >
-                <img src={profileImage || "/profile.png"} alt="Profile" />
-                </button>
-            </div>
+                    <button
+                    className="profile-btn-circle"
+                    onClick={() => navigate("/profile")}
+                    >
+                    <img src={profileImage || "/profile.png"} alt="Profile" />
+                    </button>
+                </div>
 
             </nav>
-
 
         {/* Fullscreen Map */}
         <div className="map-fullscreen">
@@ -66,7 +64,7 @@ export default function Dashboard() {
         </button>
 
         <button className="small-action-btn" onClick={() => navigate("/passenger/requests")}>
-            My Requests
+            Passenger Requests
         </button>
         </div>
     </div>

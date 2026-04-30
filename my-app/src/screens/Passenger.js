@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../components/MapView";
-import "./css/Passenger.css";
+import "./css/Dashboard.css";
+import "./css/Driver.css";
+// import "./css/Passenger.css";
+import logo2 from "../assets/carpool-log.png";
 
 export default function Passenger() {
   const navigate = useNavigate();
@@ -109,20 +112,36 @@ export default function Passenger() {
 
   return (
     <div className="dashboard-page">
-      <nav className="dashboard-navbar">
-        <button onClick={() => navigate("/dashboard")} className="back-btn">
-          ←
-        </button>
+      {/* Navbar */}
+        <nav className="dashboard-navbar">
+          
+          <button onClick={() => navigate("/dashboard")} className="back-btn">
+            ←
+          </button>
 
-        <h1 className="logo">TU Dublin</h1>
+          {/* CENTER LOGO */}
+          <div className="dashboard-logo-wrap">
+              <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
+          </div>
 
-        <button
-          className="profile-btn-circle"
-          onClick={() => navigate("/profile")}
-        >
-          <img src={profileImage || "/profile.png"} alt="Profile" />
-        </button>
-      </nav>
+          {/* RIGHT SIDE */}
+          <div className="navbar-right">
+              <button
+              className="inbox-btn"
+              onClick={() => navigate("/driver/requests")}
+              title="Ride Requests"
+              >
+              🔔
+              </button>
+
+              <button
+              className="profile-btn-circle"
+              onClick={() => navigate("/profile")}
+              >
+              <img src={profileImage || "/profile.png"} alt="Profile" />
+              </button>
+          </div>
+        </nav>
 
       <div className="map-fullscreen">
         <MapView />

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./css/Dashboard.css";
 import "./css/PassengerList.css";
+import logo2 from "../assets/carpool-log.png";
 
 export default function PassengerRequests() {
   const navigate = useNavigate();
@@ -40,60 +42,78 @@ export default function PassengerRequests() {
     }
   };
 
-  return (
-    <div className="passenger-list-container">
-      <h2>My Ride Requests</h2>
+    return (
+    <div className="request-page">
+      <nav className="dashboard-navbar">
+        {/* LEFT */}
+        <button onClick={() => navigate("/dashboard")} className="back-btn">
+          ←
+        </button>
 
-      {loading ? (
-        <p>Loading requests...</p>
-      ) : requests.length === 0 ? (
-        <p>You have not requested any rides yet.</p>
-      ) : (
-        requests.map((req) => (
-          <div key={req._id} className="driver-card">
-            <div className="trip-line">
-              {req.start || "Start"} → {req.destination || "Destination"}
-            </div>
+        {/* CENTER */}
+        <div className="dashboard-logo">
+          <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
+        </div>
 
-            <div className="info-row">
-              <strong>Driver:</strong> {req.driverEmail || "Unknown driver"}
-            </div>
+        {/* RIGHT */}
+        <div className="navbar-right">
+          <button
+            className="profile-btn-circle"
+            onClick={() => navigate("/profile")}
+          >
+            <img src={localStorage.getItem("profileImage") || "/profile.png"} alt="Profile" />
+          </button>
+        </div>
+      </nav>
 
-            <div className="info-row">
-              <strong>Destination:</strong> {req.destination || "Unknown destination"}
-            </div>
+      <div className="request-content" style={{ paddingTop: "80px" }}>
+        {loading ? (
+          <p className="empty-text">Loading requests...</p>
+        ) : requests.length === 0 ? (
+          <p className="empty-text">You have not requested any rides yet.</p>
+        ) : (
+          requests.map((req) => (
+            <div key={req._id} className="driver-card">
+              <div className="trip-line">
+                {req.start || "Start"} → {req.destination || "Destination"}
+              </div>
 
-            <div className="info-row">
-              <strong>Time:</strong> {req.time || "Unknown time"}
-            </div>
+              <div className="info-row">
+                <strong>Driver:</strong> {req.driverEmail || "Unknown driver"}
+              </div>
 
-            <div className="info-row">
-              <strong>Status:</strong> {req.status}
-            </div>
+              <div className="info-row">
+                <strong>Destination:</strong> {req.destination || "Unknown destination"}
+              </div>
 
-            {req.status === "accepted" && (
-              <button
-                className="request-btn"
-                onClick={() =>
-                  navigate("/chat", {
-                    state: {
+              <div className="info-row">
+                <strong>Time:</strong> {req.time || "Unknown time"}
+              </div>
+
+              <div className="info-row">
+                <strong>Status:</strong> {req.status}
+              </div>
+
+              {req.status === "accepted" && (
+                <button
+                  className="request-btn"
+                  onClick={() =>
+                    navigate("/chat", {
+                      state: {
                         rideRequestId: req._id,
                         destination: req.destination,
                         start: req.start,
-                    },
+                      },
                     })
-                }
-              >
-                Open Chat
-              </button>
-            )}
-          </div>
-        ))
-      )}
-
-      <button className="small-action-btn" onClick={() => navigate("/dashboard")}>
-        Back to Dashboard
-      </button>
+                  }
+                >
+                  Open Chat
+                </button>
+              )}
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

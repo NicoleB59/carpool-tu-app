@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import "./css/PassengerList.css";
+import logo2 from "../assets/carpool-log.png";
 
 export default function DriverRequests() {
   const navigate = useNavigate();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [profileImage, setProfileImage] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
+    useEffect(() => {
+    const savedImage = localStorage.getItem("profileImage");
+    if (savedImage) setProfileImage(savedImage);
+
     if (!user) {
       alert("You must be logged in as a driver");
       navigate("/");
@@ -18,6 +23,7 @@ export default function DriverRequests() {
     }
 
     fetchRequests();
+    // eslint-disable-next-line
   }, []);
 
   // FETCH DRIVER REQUESTS
@@ -70,14 +76,25 @@ export default function DriverRequests() {
 
   return (
     <div className="dashboard-page">
-      {/* NAVBAR */}
-      <nav className="dashboard-navbar">
-        <button onClick={() => navigate("/dashboard")} className="back-btn">
-          ←
-        </button>
-        <h1 className="logo">TU Dublin</h1>
-        <div />
-      </nav>
+      {/* Navbar */}
+        <nav className="dashboard-navbar">
+          <button onClick={() => navigate("/dashboard")} className="back-btn">
+            ←
+          </button>
+
+          <div className="dashboard-logo-wrap">
+            <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
+          </div>
+
+          <div className="navbar-right">
+            <button
+              className="profile-btn-circle"
+              onClick={() => navigate("/profile")}
+            >
+              <img src={profileImage || "/profile.png"} alt="Profile" />
+            </button>
+          </div>
+        </nav>
 
       {/* REQUEST LIST */}
       <div className="passenger-list-container">
@@ -115,8 +132,7 @@ export default function DriverRequests() {
                   </button>
                 </div>
               )}
-
-              // Chat button only shows for accepted requests
+              
               {req.status === "accepted" && (
                   <button
                     className="request-btn"
