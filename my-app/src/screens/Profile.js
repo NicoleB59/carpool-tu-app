@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./css/Profile.css";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const [user, setUser] = useState(null);

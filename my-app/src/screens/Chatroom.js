@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import "./css/Chatroom.css";
 import logo2 from "../assets/carpool-log.png";
+import { toast } from "react-toastify";
 
 export default function Chatroom() {
     const navigate = useNavigate();
@@ -78,7 +79,7 @@ export default function Chatroom() {
             });
 
             if (res.ok) {
-                alert("Drive started!");
+                toast.success("Drive started!");
                 navigate("/drive-tracking", {
                     state: {
                         rideRequestId,
@@ -87,11 +88,11 @@ export default function Chatroom() {
                     },
                 });
             } else {
-            alert("Failed to start drive");
+            toast.error("Failed to start drive");
             }
         } catch (error) {
             console.error(error);
-            alert("Server error starting drive");
+            toast.error("Server error starting drive");
         }
     };
 
@@ -104,14 +105,14 @@ export default function Chatroom() {
         });
 
         if (res.ok) {
-          alert("Drive completed!");
+          toast.success("Drive completed!");
           navigate("/sustainability");
         } else {
-          alert("Failed to complete drive");
+          toast.error("Failed to complete drive");
         }
       } catch (error) {
         console.error(error);
-        alert("Server error completing drive");
+        toast.error("Server error completing drive");
       }
     };
 

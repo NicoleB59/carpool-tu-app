@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import "./css/PassengerList.css";
 import logo2 from "../assets/carpool-log.png";
+import { toast } from "react-toastify";
 
 export default function DriverRequests() {
   const navigate = useNavigate();
@@ -38,11 +39,11 @@ export default function DriverRequests() {
       if (res.ok) {
         setRequests(data);
       } else {
-        alert(data.message || "Failed to load requests");
+        toast.error(data.message || "Failed to load requests");
       }
     } catch (error) {
       console.error(error);
-      alert("Server error while loading requests");
+      toast.error("Server error while loading requests");
     } finally {
       setLoading(false);
     }
@@ -63,19 +64,19 @@ export default function DriverRequests() {
       const data = await res.json();
 
       if (res.ok) {
-        alert(`Request ${status}`);
+        toast.success(`Request ${status}`);
         fetchRequests(); // refresh inbox
       } else {
-        alert(data.message || "Update failed");
+        toast.error(data.message || "Update failed");
       }
     } catch (error) {
       console.error(error);
-      alert("Server error while updating request");
+      toast.error("Server error while updating request");
     }
   };
 
   return (
-    <div className="dashboard-page">
+    <div className="requests-page">
       {/* Navbar */}
         <nav className="dashboard-navbar">
           <button onClick={() => navigate("/dashboard")} className="back-btn">

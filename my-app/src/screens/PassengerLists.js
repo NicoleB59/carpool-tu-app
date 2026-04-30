@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./css/PassengerList.css";
+import { toast } from "react-toastify";
 
 function getMatchLabel(score) {
   if (score >= 85) return "Best Match";
@@ -38,7 +39,7 @@ export default function PassengerLists() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Ride request sent!");
+        toast.success("Ride request sent!");
       } else {
         alert(data.message || "Request failed");
       }

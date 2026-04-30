@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./css/Sustainability.css";
 import { calculateSustainabilityMetrics } from "../utils/sustainability";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Sustainability() {
   const [latestRecord, setLatestRecord] = useState(null);

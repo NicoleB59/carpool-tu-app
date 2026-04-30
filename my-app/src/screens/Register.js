@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./css/Register.css";
 import logo from "../assets/carpool-logo.png";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Register() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -49,29 +52,38 @@ export default function Register() {
             gender: form.gender,
         }),
     });
-    setForm({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      gender: "",
-    });
-
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        gender: "",
+      });
         const data = await res.json();
 
         if (res.ok) {
-        alert("Registration successful!");
-            setForm({
+            if (res.ok) {
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  name: form.name,
+                  email: form.email,
+                  gender: form.gender,
+                })
+              );
+
+              setForm({
                 name: "",
                 email: "",
                 password: "",
                 confirmPassword: "",
                 gender: "",
-            });
+              });
+            }
+            navigate("/dashboard");
         } else {
             alert(data.message || "Registration failed");
         }
-
         } catch (error) {
             alert("Server connection failed");
         }

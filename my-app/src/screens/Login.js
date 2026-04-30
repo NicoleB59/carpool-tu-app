@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./css/Register.css";
 import logo from "../assets/carpool-logo.png";
-
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -38,9 +38,6 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Login successful!");
-        console.log("Logged in user:", data.user);
-
         // Save user session (basic)
         localStorage.setItem("user", JSON.stringify(data.user));
 

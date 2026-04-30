@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./css/DriveTracking.css";
+import { toast } from "react-toastify";
 
 const containerStyle = {
   width: "100%",
@@ -91,7 +93,7 @@ export default function DriveTracking() {
             lng: point.lng(),
           }));
         } else {
-          alert("Could not draw route");
+          toast.error("Could not draw route");
         }
       }
     );
@@ -99,7 +101,7 @@ export default function DriveTracking() {
 
   const simulateDrive = () => {
     if (!routePathRef.current.length || !carMarkerRef.current) {
-      alert("Route not ready yet");
+      toast.error("Could not draw route");
       return;
     }
 
@@ -113,8 +115,8 @@ export default function DriveTracking() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "completed" }),
         });
-        alert("Arrived at destination!");
-        navigate("/sustainability");
+        toast.success("Arrived at destination!");
+        setTimeout(() => navigate("/sustainability"), 800);
         return;
       }
 

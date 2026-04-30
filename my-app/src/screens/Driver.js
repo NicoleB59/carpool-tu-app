@@ -4,6 +4,7 @@ import MapView from "../components/MapView";
 import "./css/Dashboard.css";
 import "./css/Driver.css";
 import logo2 from "../assets/carpool-log.png";
+import { toast } from "react-toastify";
 
 export default function Driver() {
   const navigate = useNavigate();
@@ -130,11 +131,11 @@ export default function Driver() {
         return;
       }
 
-      alert("Ride posted successfully!");
+      toast.success("Ride posted successfully!");
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
-      alert("Failed to post ride.");
+      toast.error("Failed to post ride.");
     }
   };
 
@@ -159,7 +160,7 @@ export default function Driver() {
               onClick={() => navigate("/driver/requests")}
               title="Ride Requests"
               >
-              ☰
+              🔔
               </button>
 
               <button

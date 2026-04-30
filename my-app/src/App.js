@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Login from "./screens/Login";
 import Register from "./screens/Register";
@@ -33,6 +35,12 @@ function App() {
         <Route path="/drive-tracking" element={<DriveTracking />} />
         <Route path="/review" element={<Review />} />
       </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={2500}
+        hideProgressBar
+        theme="colored"
+      />
     </Router>
   );
 }

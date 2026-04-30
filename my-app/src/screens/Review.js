@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screens/css/PassengerList.css";
+import { toast } from "react-toastify";
 
 export default function Review() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Review() {
 
   const submitReview = async () => {
     if (!comment.trim()) {
-      alert("Please write a short review.");
+      toast.success("Please write a short review.");
       return;
     }
 
@@ -31,14 +32,14 @@ export default function Review() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Review submitted!");
+        toast.success("Review submitted!");
         navigate("/dashboard");
       } else {
-        alert(data.message || "Failed to submit review");
+        toast.error(data.message || "Failed to submit review");
       }
     } catch (error) {
       console.error("Review error:", error);
-      alert("Server error submitting review");
+      toast.error("Server error submitting review");
     }
   };
 

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import MapView from "../components/MapView";
 import "./css/Dashboard.css";
 import "./css/Driver.css";
-// import "./css/Passenger.css";
 import logo2 from "../assets/carpool-log.png";
+import { toast } from "react-toastify";
 
 export default function Passenger() {
   const navigate = useNavigate();

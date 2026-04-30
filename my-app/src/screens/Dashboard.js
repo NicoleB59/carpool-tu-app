@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./css/Dashboard.css";
 import MapView from "../components/MapView";
 import logo2 from "../assets/carpool-log.png";
+import { toast } from "react-toastify";
 
 
 export default function Dashboard() {
