@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../screens/css/PassengerList.css";
+import "./css/Dashboard.css";
+import "./css/Chatroom.css";
+import logo2 from "../assets/carpool-log.png";
 
 export default function Chatroom() {
     const navigate = useNavigate();
@@ -125,45 +127,73 @@ export default function Chatroom() {
   }
 
   return (
-    <div className="passenger-list-container">
-      <h2>Ride Chat</h2>
-
-      <div className="driver-card">
-        {messages.length === 0 ? (
-          <p>No messages yet. Send the first message.</p>
-        ) : (
-          messages.map((msg) => (
-            <div key={msg._id} className="info-row">
-              <strong>
-                {msg.senderEmail === user.email ? "You" : msg.senderEmail}:
-              </strong>{" "}
-              {msg.message}
-            </div>
-          ))
-        )}
-
-        <input
-          className="driver-input"
-          style={{ width: "100%", marginTop: "15px" }}
-          placeholder="Type meet-up details..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-
-        <button className="request-btn" onClick={sendMessage}>
-            Send Message
+    <div className="chat-page">
+      <nav className="dashboard-navbar">
+        <button onClick={() => navigate("/dashboard")} className="back-btn">
+          ←
         </button>
 
-        <button className="request-btn" onClick={startDrive}>
+        <div className="dashboard-logo-wrap">
+          <img src={logo2} alt="Carpool Logo" className="dashboard-logo-img" />
+        </div>
+
+        <div />
+      </nav>
+
+      <h2 className="chat-header-title">Ride Chat</h2>
+
+      <div className="chat-box">
+        <div className="messages-area">
+          {messages.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#777" }}>
+              No messages yet. Send the first message.
+            </p>
+          ) : (
+            messages.map((msg) => {
+              const mine = msg.senderEmail === user.email;
+
+              return (
+                <div
+                  key={msg._id}
+                  className={`message-row ${mine ? "mine" : "theirs"}`}
+                >
+                  <div className="message-bubble">
+                    <span className="message-sender">
+                      {mine ? "You" : msg.senderEmail}
+                    </span>
+                    {msg.message}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        <div className="chat-input-row">
+          <input
+            className="chat-input"
+            placeholder="Type meet-up details..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+
+          <button className="chat-send-btn" onClick={sendMessage}>
+            Send
+          </button>
+        </div>
+
+        <div className="chat-actions">
+          <button className="chat-action-btn primary" onClick={startDrive}>
             Start Drive
-        </button>
+          </button>
 
-        <button className="request-btn" onClick={completeDrive}>
-            Complete Drive
-        </button>
+          <button className="chat-action-btn" onClick={completeDrive}>
+            Complete
+          </button>
+        </div>
 
-        <button className="small-action-btn" onClick={() => navigate("/dashboard")}>
-            Back to Dashboard
+        <button className="chat-back-btn" onClick={() => navigate("/dashboard")}>
+          Back to Dashboard
         </button>
       </div>
     </div>

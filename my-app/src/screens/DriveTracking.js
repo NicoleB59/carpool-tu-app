@@ -160,41 +160,15 @@ export default function DriveTracking() {
         options={{ mapId: process.env.REACT_APP_GOOGLE_MAP_ID }}
       />
 
-      <button
-        style={{
-          position: "fixed",
-          bottom: "75px",
-          left: "20px",
-          zIndex: 99,
-          padding: "12px 18px",
-          borderRadius: "20px",
-          border: "none",
-          background: "#f9b233",
-          color: "black",
-          fontWeight: "bold",
-        }}
-        onClick={simulateDrive}
-      >
-        Simulate Drive
-      </button>
+      <div className="map-controls">
+          <button className="map-btn primary" onClick={simulateDrive}>
+            Start Live Demo
+          </button>
 
-      <button
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          left: "20px",
-          zIndex: 99,
-          padding: "12px 18px",
-          borderRadius: "20px",
-          border: "none",
-          background: "#133a94",
-          color: "white",
-          fontWeight: "bold",
-        }}
-        onClick={() => navigate("/dashboard")}
-      >
-        Back
-      </button>
+          <button className="map-btn secondary" onClick={() => navigate("/dashboard")}>
+            Back
+          </button>
+      </div>
     </div>
   );
 }

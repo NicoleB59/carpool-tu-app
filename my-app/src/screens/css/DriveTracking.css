@@ -1,0 +1,33 @@
+.map-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+.map-btn {
+  padding: 8px 14px;
+  font-size: 12px;
+  border-radius: 20px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.map-btn.primary {
+  background: #1a7184;
+  color: white;
+}
+
+.map-btn.secondary {
+  background: linear-gradient(#d9d9d9, #8f8f8f);
+  color: white;
+}
+
+.map-btn:hover {
+  transform: scale(1.05);
+}
